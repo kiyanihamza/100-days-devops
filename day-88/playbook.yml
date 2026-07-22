@@ -1,0 +1,34 @@
+---
+- name: Install and configure httpd on app servers
+  hosts: all
+  become: true
+  tasks:
+    - name: Install httpd package
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+        update_cache: true
+
+    - name: Ensure httpd service is running and enabled
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Create or update the web page content
+      ansible.builtin.blockinfile:
+        path: /var/www/html/index.html
+        create: true
+        block: |
+          Welcome to XfusionCorp!
+
+          This is Nautilus sample file, created using Ansible!
+
+          Please do not modify this file manually!
+
+    - name: Set ownership and permissions for the index page
+      ansible.builtin.file:
+        path: /var/www/html/index.html
+        owner: apache
+        group: apache
+        mode: '0755'
