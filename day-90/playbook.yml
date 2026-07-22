@@ -1,0 +1,66 @@
+---
+- name: Create finance files and set ACLs on app servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure /opt/finance directory exists
+      ansible.builtin.file:
+        path: /opt/finance
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Create /opt/finance/blog.txt on app server 1
+      ansible.builtin.file:
+        path: /opt/finance/blog.txt
+        state: touch
+        owner: root
+        group: root
+        mode: '0640'
+      when: inventory_hostname == 'stapp01'
+
+    - name: Set ACL for group tony on blog.txt
+      ansible.posix.acl:
+        path: /opt/finance/blog.txt
+        entity: tony
+        etype: group
+        permissions: r
+        state: present
+      when: inventory_hostname == 'stapp01'
+
+    - name: Create /opt/finance/story.txt on app server 2
+      ansible.builtin.file:
+        path: /opt/finance/story.txt
+        state: touch
+        owner: root
+        group: root
+        mode: '0640'
+      when: inventory_hostname == 'stapp02'
+
+    - name: Set ACL for user steve on story.txt
+      ansible.posix.acl:
+        path: /opt/finance/story.txt
+        entity: steve
+        etype: user
+        permissions: rw
+        state: present
+      when: inventory_hostname == 'stapp02'
+
+    - name: Create /opt/finance/media.txt on app server 3
+      ansible.builtin.file:
+        path: /opt/finance/media.txt
+        state: touch
+        owner: root
+        group: root
+        mode: '0640'
+      when: inventory_hostname == 'stapp03'
+
+    - name: Set ACL for group banner on media.txt
+      ansible.posix.acl:
+        path: /opt/finance/media.txt
+        entity: banner
+        etype: group
+        permissions: rw
+        state: present
+      when: inventory_hostname == 'stapp03'
