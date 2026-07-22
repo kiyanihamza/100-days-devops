@@ -1,0 +1,12 @@
+---
+- name: Install logrotate on application servers
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Install logrotate package with yum
+      ansible.builtin.yum:
+        name: logrotate
+        state: present
+        update_cache: true
