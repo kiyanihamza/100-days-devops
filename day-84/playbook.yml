@@ -1,0 +1,9 @@
+---
+- name : copy the /usr/src/sysops/index.html file to all application servers, placing it at /opt/sysops
+  hosts : all
+  become : yes
+  tasks:
+    - name : copy a file to all application server
+      ansible.builtin.copy:
+        src: /usr/src/sysops/index.html
+        dest: /opt/sysops
