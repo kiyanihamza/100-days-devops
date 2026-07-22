@@ -1,0 +1,16 @@
+---
+- name: install httpd on all app servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: install httpd on all servers
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+        update_cache: true
+
+    - name: start httpd on all servers
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
