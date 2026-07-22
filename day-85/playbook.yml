@@ -1,0 +1,13 @@
+---
+- name: Create file on all app servers
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Create /tmp/appdata.txt with correct permissions and owner
+      ansible.builtin.file:
+        path: /tmp/appdata.txt
+        state: touch
+        mode: '0755'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
