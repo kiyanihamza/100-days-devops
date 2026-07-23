@@ -1,0 +1,21 @@
+---
+# tasks file for role/httpd
+
+- name: Install the latest version of HTTPD
+  ansible.builtin.yum:
+    name: httpd
+    state: latest
+
+- name: Start and enable service httpd
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: Copy index.html template to destination
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0777'
