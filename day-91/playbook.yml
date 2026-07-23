@@ -1,0 +1,42 @@
+---
+- name: Deploy simple httpd web page on Stratos DC app servers
+  hosts: all
+  become: yes
+  vars:
+    index_path: /var/www/html/index.html
+  tasks:
+    - name: Install httpd package
+      package:
+        name: httpd
+        state: present
+
+    - name: Ensure httpd service is enabled and started
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Create index.html with initial content
+      copy:
+        dest: "{{ index_path }}"
+        content: |
+          This is a Nautilus sample file, created using Ansible!
+        owner: apache
+        group: apache
+        mode: '0644'
+
+    - name: Ensure welcome line is present at the top using lineinfile
+      ansible.builtin.lineinfile:
+        path: "{{ index_path }}"
+        line: "Welcome to xFusionCorp Industries!"
+        insertbefore: BOF
+        create: yes
+
+    - name: Ensure correct owner/group/mode for index.html
+      ansible.builtin.file:
+        path: "{{ index_path }}"
+        owner: apache
+        group: apache
+        mode: '0644'
+
+   
