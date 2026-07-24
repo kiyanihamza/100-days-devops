@@ -1,0 +1,31 @@
+---
+- name: Use conditional statements to perform specific tasks for each server
+  hosts: all
+  become: yes
+  tasks:
+    - name: Copy blog.txt from jump host to app server 1
+      ansible.builtin.copy:
+        src: /usr/src/data/blog.txt
+        dest: /opt/data/blog.txt
+        owner: tony
+        group: tony
+        mode: '0755'
+      when: ansible_nodename == 'stapp01'
+
+    - name: Copy story.txt from jump host to app server 2
+      ansible.builtin.copy:
+        src: /usr/src/data/story.txt
+        dest: /opt/data/story.txt
+        owner: steve
+        group: steve
+        mode: '0755'
+      when: ansible_nodename == 'stapp02'
+
+    - name: Copy media.txt from jump host to app server 3
+      ansible.builtin.copy:
+        src: /usr/src/data/media.txt
+        dest: /opt/data/media.txt
+        owner: banner
+        group: banner
+        mode: '0755'
+      when: ansible_nodename == 'stapp03'
